@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColdCraft</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111827;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #1f2937;
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        textarea,
+        select,
+        button {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+            background-color: #374151;
+            color: white;
+        }
+
+        select {
+            background-color: #374151;
+            color: white;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .output {
+            margin-top: 25px;
+            background-color: #111827;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #d1d5db;
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+            background-color: #059669;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #374151;
+            margin: 30px 0;
+        }
+
+        .drafts-title {
+            text-align: center;
+            font-size: 18px;
+            color: #9ca3af;
+            margin-bottom: 5px;
+        }
+
+        .draft-card {
+            background-color: #111827;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .draft-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .draft-industry {
+            color: #2563eb;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .draft-date {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .draft-email {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #d1d5db;
+        }
+
+        .draft-copy-btn {
+            margin-top: 10px;
+            background-color: #059669;
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .draft-copy-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>&#9889; ColdCraft</h1>
+
+        <form method="POST">
+
+            <label>Context / Bullet Points</label>
+            <textarea
+                name="bullets"
+                rows="6"
+                placeholder="Enter bullet points or context about your outreach..."
+            ></textarea>
+
+            <label>Industry</label>
+            <select name="industry">
+                <option>Sales</option>
+                <option>Freelance</option>
+                <option>Real Estate</option>
+                <option>Marketing</option>
+            </select>
+
+            <label>Tone</label>
+            <select name="tone">
+                <option>Professional</option>
+                <option>Warm</option>
+                <option>Confident</option>
+                <option>Persuasive</option>
+            </select>
+
+            <button type="submit">Generate Email</button>
+
+        </form>
+
+        {% if generated_email %}
+        <div class="output">{{ generated_email }}</div>
+
+        <button class="copy-btn"
+            onclick="navigator.clipboard.writeText(`{{ generated_email }}`).then(() => this.innerText = 'Copied ✓').catch(() => this.innerText = 'Copy failed')">
+            Copy Email
+        </button>
+        {% endif %}
+
+        {% if drafts %}
+        <hr class="divider">
+        <h2 class="drafts-title">Saved Drafts</h2>
+
+        {% for draft in drafts %}
+        <div class="draft-card">
+
+            <div class="draft-header">
+                <span class="draft-industry">{{ draft[1] }} &mdash; {{ draft[2] }}</span>
+                <span class="draft-date">{{ draft[4] }}</span>
+            </div>
+
+            <div class="draft-email">{{ draft[3] }}</div>
+
+            <button class="draft-copy-btn"
+                onclick="navigator.clipboard.writeText(`{{ draft[3] }}`).then(() => this.innerText = 'Copied ✓').catch(() => this.innerText = 'Copy failed')">
+                Copy Draft
+            </button>
+
+        </div>
+        {% endfor %}
+
+        {% endif %}
+
+    </div>
+</body>
+</html>
